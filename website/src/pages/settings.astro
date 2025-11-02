@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getAllSettings } from '../utils/settings';
+
+const categories = await getAllSettings();
+const totalFiles = categories.reduce((sum, cat) => sum + cat.count, 0);
+---
+
+<Layout title="Browse Settings - CSTShare">
+  <div class="space-y-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Browse Settings</h1>
+      <p class="text-lg text-gray-600">
+        Explore {totalFiles} Logic Pro settings across {categories.length} categories
+      </p>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex flex-wrap gap-2 justify-center">
+      <button class="category-tab active px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" data-category="all">
+        All ({totalFiles})
+      </button>
+      {categories.map((category) => (
+        <button
+          class="category-tab px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+          data-category={category.name}
+        >
+          {category.name} ({category.count})
+        </button>
+      ))}
+    </div>
+
+    <!-- Search Box -->
+    <div class="max-w-2xl mx-auto">
+      <input
+        type="text"
+        id="search"
+        placeholder="Search settings..."
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <!-- Settings Categories -->
+    <div class="space-y-12">
+      {categories.map((category) => (
+        <section class="category-section" data-category={category.name}>
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">{category.name}</h2>
+            <p class="text-gray-600">{category.description}</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {category.files.map((file) => (
+              <div class="setting-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition" data-name={file.name.toLowerCase()}>
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-semibold text-gray-900 flex-1">{file.name}</h3>
+                  <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                    .{file.extension}
+                  </span>
+                </div>
+                {file.subcategory && (
+                  <p class="text-sm text-gray-500 mb-2">{file.subcategory}</p>
+                )}
+                <div class="text-xs text-gray-400 font-mono truncate" title={file.path}>
+                  {file.path}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    {categories.length === 0 && (
+      <div class="text-center py-12 bg-gray-50 rounded-lg">
+        <p class="text-gray-600 text-lg">No settings found. Add some .cst files to get started!</p>
+      </div>
+    )}
+  </div>
+</Layout>
+
+<script>
+  // Category filtering
+  const tabs = document.querySelectorAll('.category-tab');
+  const sections = document.querySelectorAll('.category-section');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-category');
+
+      // Update active tab
+      tabs.forEach(t => {
+        t.classList.remove('active', 'bg-blue-600', 'text-white');
+        t.classList.add('bg-gray-200', 'text-gray-700');
+      });
+      tab.classList.add('active', 'bg-blue-600', 'text-white');
+      tab.classList.remove('bg-gray-200', 'text-gray-700');
+
+      // Show/hide sections
+      sections.forEach(section => {
+        if (category === 'all' || section.getAttribute('data-category') === category) {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Search functionality
+  const searchInput = document.getElementById('search') as HTMLInputElement;
+  const cards = document.querySelectorAll('.setting-card');
+
+  searchInput?.addEventListener('input', (e) => {
+    const query = (e.target as HTMLInputElement).value.toLowerCase();
+
+    cards.forEach(card => {
+      const name = card.getAttribute('data-name') || '';
+      if (name.includes(query)) {
+        (card as HTMLElement).style.display = 'block';
+      } else {
+        (card as HTMLElement).style.display = 'none';
+      }
+    });
+  });
+</script>
