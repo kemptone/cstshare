@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Website
+website/node_modules/
+website/dist/
+website/.astro/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+Temp/
+*.tmp
