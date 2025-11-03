@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { title, description = "Share and discover Logic Pro Channel Strip Settings, patches, and production tips" } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL + "/";
 ---
 
 <!doctype html>
@@ -16,6 +16,7 @@ const base = import.meta.env.BASE_URL;
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
+    <base href={base} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -25,20 +26,20 @@ const base = import.meta.env.BASE_URL;
       <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-8">
-            <a href={`${base}`} class="text-xl font-bold text-blue-600 hover:text-blue-700">
+            <a href={``} class="text-xl font-bold text-blue-600 hover:text-blue-700">
               CSTShare
             </a>
             <div class="hidden md:flex space-x-6">
-              <a href={`${base}`} class="text-gray-600 hover:text-gray-900 transition">
+              <a href={``} class="text-gray-600 hover:text-gray-900 transition">
                 Home
               </a>
-              <a href={`${base}settings`} class="text-gray-600 hover:text-gray-900 transition">
+              <a href={`settings`} class="text-gray-600 hover:text-gray-900 transition">
                 Browse Settings
               </a>
-              <a href={`${base}blog`} class="text-gray-600 hover:text-gray-900 transition">
+              <a href={`blog`} class="text-gray-600 hover:text-gray-900 transition">
                 Blog
               </a>
-              <a href={`${base}contribute`} class="text-gray-600 hover:text-gray-900 transition">
+              <a href={`contribute`} class="text-gray-600 hover:text-gray-900 transition">
                 Contribute
               </a>
             </div>
